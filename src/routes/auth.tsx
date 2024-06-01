@@ -26,7 +26,7 @@ authRoutes.get(
         <br />
         <h2 class="text-2xl">how would you like to sign in?</h2>
         <br />
-        <ul class="list-disc list-inside">
+        <ul class="list-disc list-inside flex flex-col gap-6">
           {oauthProviders.map((provider) => (
             <li key={provider}>
               <a

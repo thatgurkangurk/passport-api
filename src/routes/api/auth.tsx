@@ -11,10 +11,14 @@ import {
 import { users } from "../../lib/schema/user";
 import { eq } from "drizzle-orm";
 import { invalidateSession } from "../../lib/auth";
+import {
+  createGithubSession,
+  getGithubAuthorisationUrl,
+} from "../../lib/auth/github";
 
 const authApiRoutes = new Hono<AppContext>();
 
-export const oauthProviders = ["discord"] as const;
+export const oauthProviders = ["discord", "github"] as const;
 const providersSchema = z.enum(oauthProviders);
 
 authApiRoutes
@@ -113,6 +117,16 @@ authApiRoutes
           });
           return c.redirect(url.toString());
         }
+        case "github": {
+          const url = await getGithubAuthorisationUrl({ c, state });
+          setCookie(c, "github_oauth_state", state, {
+            httpOnly: true,
+            maxAge: 60 * 10,
+            path: "&",
+            secure: Bun.env.NODE_ENV === "production",
+          });
+          return c.redirect(url.toString());
+        }
       }
     }
   )
@@ -175,8 +189,27 @@ authApiRoutes
             redirectUrl.searchParams.append("token", session.id);
             return c.redirect(redirectUrl.toString());
           }
+          case "github": {
+            const session = await createGithubSession({
+              c,
+              idToken: code,
+              sessionToken: sessionTokenCookie,
+            });
+            if (!session) {
+              return c.json({}, 400);
+            }
+            if (session?.fresh) {
+              const sessionCookie = c
+                .get("lucia")
+                .createSessionCookie(session.id);
+              c.header("Set-Cookie", sessionCookie.serialize());
+            }
+            const redirectUrl = new URL(redirect);
+            redirectUrl.searchParams.append("token", session.id);
+            return c.redirect(redirectUrl.toString());
+          }
           default: {
-            return c.json({}, 400);
+            return c.json({ message: "invalid provider" }, 400);
           }
         }
       } catch (err) {
