@@ -28,7 +28,7 @@ RUN bun run build
 # copy production dependencies and source code into final image
 FROM base AS release
 COPY --from=prerelease /usr/src/app/build/main.js ./build/main.js
-COPY ./static ./static
+COPY --from=prerelease /usr/src/app/static ./static
 
 # run the app
 USER bun
