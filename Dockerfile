@@ -1,7 +1,7 @@
 # use the official Bun image
 # see all versions at https://hub.docker.com/r/oven/bun/tags
 FROM oven/bun:1.1.12 as base
-LABEL org.opencontainers.image.source=https://github.com/thatgurkangurk/gurkz.me
+LABEL org.opencontainers.image.source=https://github.com/thatgurkangurk/passport-api
 WORKDIR /usr/src/app
 
 # install dependencies into temp directory
