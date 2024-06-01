@@ -55,7 +55,9 @@ userRoutes.get("/", async (c) => {
               </>
             ) : (
               <a
-                href={`/api/auth/${provider.toLowerCase()}`}
+                href={`/api/auth/${provider.toLowerCase()}?redirect=${
+                  import.meta.env.VITE_DOMAIN
+                }/user`}
                 class="bg-teal-700 p-2 rounded-md"
               >
                 connect

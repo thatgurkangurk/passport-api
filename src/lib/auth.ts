@@ -4,8 +4,7 @@ import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 import { sessions } from "./schema/session";
 import { users } from "./schema/user";
 import { Lucia, verifyRequestOrigin, type User } from "lucia";
-import { eq, type InferInsertModel } from "drizzle-orm";
-import { customLogger } from "./log";
+import { eq, type InferSelectModel } from "drizzle-orm";
 import { getCookie } from "hono/cookie";
 
 export async function invalidateSession(
@@ -114,4 +113,4 @@ export async function authMiddleware(
   await next();
 }
 
-export type DatabaseUserAttributes = InferInsertModel<typeof users>;
+export type DatabaseUserAttributes = InferSelectModel<typeof users>;
