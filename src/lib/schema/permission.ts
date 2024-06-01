@@ -1,15 +1,14 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
+import { users } from "./user";
+import { boolean, pgTable, varchar } from "drizzle-orm/pg-core";
 
-export const permissions = sqliteTable("permission", {
-  id: text("id")
+export const permissions = pgTable("permission", {
+  id: varchar("id")
     .primaryKey()
-    .notNull()
     .$defaultFn(() => nanoid()),
-  canCreateMusicIds: integer("can_create_music_ids", { mode: "boolean" })
+  userId: varchar("user_id")
     .notNull()
-    .default(false),
-  canManageUserIds: integer("can_manage_music_ids", { mode: "boolean" })
-    .notNull()
-    .default(false),
+    .references(() => users.id, { onDelete: "cascade" }),
+  canCreateMusicIds: boolean("can_create_music_ids").notNull().default(false),
+  canManageUserIds: boolean("can_manage_music_ids").notNull().default(false),
 });

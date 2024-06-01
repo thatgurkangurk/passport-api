@@ -13,7 +13,7 @@ const createUserSchema = z.object({
     .max(128, {
       message: "username can not be longer than 128 characters",
     })
-    .regex(/^[a-z0-9_]+$/, {
+    .regex(/^[A-Za-z0-9_-]+$/, {
       message: "username can only contain letters, numbers and underscores",
     }),
 
@@ -26,6 +26,7 @@ const createUserSchema = z.object({
       message: "email has to be shorter than 128 characters",
     })
     .email("you have to provide a valid email"),
+  profilePictureUrl: z.string().url(),
 });
 
 type CreateUserSchema = z.infer<typeof createUserSchema>;
@@ -39,30 +40,42 @@ export async function createUser(data: CreateUserSchema, db: Database) {
 
     errors.push(
       ...getErrors(fieldErrors.email),
-      ...getErrors(fieldErrors.username)
+      ...getErrors(fieldErrors.username),
+      ...getErrors(fieldErrors.profilePictureUrl)
     );
     console.log(errors);
-    return errors;
+    return null;
   }
 
   const user = await db
     .transaction(async (trx) => {
-      const [permission] = await trx.insert(permissions).values({}).returning();
-      const [user] = await trx
+      const [newUser] = await trx
         .insert(users)
         .values({
           email: parseResult.data.email,
           username: parseResult.data.username,
-          permissionsId: permission.id,
+          profilePictureUrl: parseResult.data.profilePictureUrl,
+        })
+        .returning();
+      const [permission] = await trx
+        .insert(permissions)
+        .values({
+          userId: newUser.id,
         })
         .returning();
 
-      return await trx.query.users.findFirst({
-        where: (users, { eq }) => eq(users.id, user.id),
-        with: {
-          permissions: true,
-        },
-      });
+      const user = await trx.query.users
+        .findFirst({
+          where: (users, { eq }) => eq(users.id, newUser.id),
+          with: {
+            permissions: true,
+          },
+        })
+        .catch((err) => {
+          console.error(`retrieving user failed: ${err}`);
+        });
+
+      return user;
     })
     .catch((err) => {
       console.error(`something went wrong: ${err}`);

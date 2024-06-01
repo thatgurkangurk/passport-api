@@ -5,21 +5,31 @@
   "devDependencies": {
     "@biomejs/biome": "1.7.3",
     "@types/bun": "latest",
-    "better-sqlite3": "^10.0.0",
-    "bun-sqlite-migrations": "^1.0.2",
-    "drizzle-kit": "^0.21.4"
+    "autoprefixer": "^10.4.19",
+    "drizzle-kit": "^0.21.4",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "vite": "^5.2.12"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@hono/vite-dev-server": "^0.12.1",
+    "@hono/zod-validator": "^0.2.1",
+    "@lucia-auth/adapter-drizzle": "^1.0.7",
+    "arctic": "^1.9.0",
     "drizzle-orm": "^0.30.10",
     "hono": "^4.4.0",
+    "lucia": "^3.2.0",
     "nanoid": "^5.0.7",
+    "postgres": "^3.4.4",
     "zod": "^3.23.8"
   },
   "scripts": {
-    "dev": "bun run --hot src/main.ts",
-    "format": "biome format --write src"
+    "dev": "bun run --bun vite",
+    "build": "vite build --mode bundle && bun build ./src/main.tsx --minify --target node --outdir ./build",
+    "format": "biome format --write src",
+    "migrate": "drizzle-kit generate && drizzle-kit migrate"
   }
 }

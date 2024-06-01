@@ -1,31 +1,28 @@
 import { nanoid } from "nanoid";
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { relations } from "drizzle-orm";
+import { pgTable, varchar } from "drizzle-orm/pg-core";
 import { permissions } from "./permission";
+import { relations } from "drizzle-orm";
 
-export const users = sqliteTable("user", {
-  id: text("id")
-    .notNull()
+export const users = pgTable("user", {
+  id: varchar("id")
     .primaryKey()
     .$defaultFn(() => nanoid()),
-  username: text("username", {
+  username: varchar("username", {
     length: 32,
   })
     .notNull()
     .unique(),
-  email: text("email", {
+  email: varchar("email", {
     length: 128,
   })
     .notNull()
     .unique(),
-  permissionsId: text("permissions_id")
-    .notNull()
-    .references(() => permissions.id),
+  profilePictureUrl: varchar("profile_picture_url").notNull(),
 });
 
 export const usersRelations = relations(users, ({ one }) => ({
   permissions: one(permissions, {
-    fields: [users.permissionsId],
-    references: [permissions.id],
+    fields: [users.id],
+    references: [permissions.userId],
   }),
 }));

@@ -1,21 +1,21 @@
-import { Database as BunDatabase } from "bun:sqlite";
-import { drizzle, type BunSQLiteDatabase } from "drizzle-orm/bun-sqlite";
 import { schema } from "./schema";
+import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { AppContext } from "./context";
 
 import type { Context } from "hono";
+import postgres from "postgres";
 
-const sqlite = new BunDatabase("data/passport.db");
+const queryClient = postgres(Bun.env.DB_URI as string);
 
 const initialiseDb = (c: Context<AppContext>) => {
   let db = c.get("db");
   if (!db) {
-    db = drizzle(sqlite, { schema: schema });
+    db = drizzle(queryClient, { schema: schema });
     c.set("db", db);
   }
   return db;
 };
 
-type Database = BunSQLiteDatabase<typeof schema>;
+type Database = PostgresJsDatabase<typeof schema>;
 
-export { sqlite, initialiseDb, type Database };
+export { queryClient, initialiseDb, type Database };

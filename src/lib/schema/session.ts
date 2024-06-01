@@ -1,12 +1,15 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { users } from "./user";
+import { pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 
-export const sessions = sqliteTable("session", {
-	id: text("id").notNull().primaryKey(),
-	userId: text("user_id")
-		.notNull()
-		.references(() => users.id),
-	expiresAt: integer("expires_at", {
-        mode: "timestamp"
-    }).notNull()
+export const sessions = pgTable("session", {
+  id: varchar("id").notNull().primaryKey(),
+  userId: varchar("user_id")
+    .notNull()
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
+  expiresAt: timestamp("expires_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
 });

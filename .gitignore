@@ -131,3 +131,9 @@ dist
 
 # data
 data/
+
+# static (styles, etc)
+static/
+
+# build
+build/
