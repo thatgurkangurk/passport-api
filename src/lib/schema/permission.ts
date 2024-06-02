@@ -10,5 +10,5 @@ export const permissions = pgTable("permission", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   canCreateMusicIds: boolean("can_create_music_ids").notNull().default(false),
-  canManageUserIds: boolean("can_manage_music_ids").notNull().default(false),
+  canManageMusicIds: boolean("can_manage_music_ids").notNull().default(false),
 });

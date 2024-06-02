@@ -12,12 +12,14 @@ import { userRoutes } from "./routes/user";
 import { authRoutes } from "./routes/auth";
 import { serveStatic } from "hono/bun";
 import { renderer } from "./lib/renderer";
+import { prettyJSON } from "hono/pretty-json";
 
 const app = new Hono<AppContext>();
 app
   .use(logger(customLogger))
   .use(cors())
   .use(csrf())
+  .use(prettyJSON())
   .get("*", renderer)
   .get(
     "/static/*",

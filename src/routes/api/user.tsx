@@ -19,7 +19,20 @@ export async function getOAuthAccounts(
 userApiRoutes
   .get("/@me", async (c) => {
     const user = c.get("user");
-    return c.json(user);
+
+    if (!user) {
+      return c.json("unauthorised", 403);
+    }
+
+    const permissions = await c.get("db").query.permissions.findFirst({
+      where: (p, { eq }) => eq(p.userId, user.id),
+      columns: {
+        id: false,
+        userId: false,
+      },
+    });
+
+    return c.json({ ...user, permissions: permissions });
   })
   .get("/oauth-accounts", async (c) => {})
   .get(
