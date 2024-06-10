@@ -36,7 +36,7 @@ userApiRoutes
   })
   .get("/oauth-accounts", async (c) => {})
   .get(
-    "/:id",
+    "/get/:id",
     zValidator(
       "param",
       z.object({

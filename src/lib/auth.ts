@@ -66,6 +66,7 @@ export async function authMiddleware(
 ) {
   if (
     c.req.path.startsWith("/api/auth") ||
+    c.req.path.startsWith("/api/user/get") ||
     c.req.path.startsWith("/auth") ||
     c.req.path.startsWith("/static")
   ) {
