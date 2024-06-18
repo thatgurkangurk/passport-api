@@ -1,35 +1,29 @@
 {
-  "name": "passport-api",
-  "module": "src/main.ts",
+  "name": "astro",
   "type": "module",
-  "devDependencies": {
-    "@biomejs/biome": "1.7.3",
-    "@types/bun": "latest",
-    "autoprefixer": "^10.4.19",
-    "drizzle-kit": "^0.21.4",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
-    "vite": "^5.2.12"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
-    "@hono/vite-dev-server": "^0.12.1",
-    "@hono/zod-validator": "^0.2.1",
+    "@astrojs/check": "^0.7.0",
+    "@astrojs/node": "^8.3.1",
+    "@astrojs/tailwind": "^5.1.0",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
-    "arctic": "^1.9.0",
-    "drizzle-orm": "^0.30.10",
-    "hono": "^4.4.0",
+    "astro": "^4.10.3",
+    "drizzle-orm": "^0.31.2",
     "lucia": "^3.2.0",
     "nanoid": "^5.0.7",
     "postgres": "^3.4.4",
-    "zod": "^3.23.8"
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.4.5"
   },
-  "scripts": {
-    "dev": "bun run --bun vite",
-    "build": "vite build --mode bundle && bun build ./src/main.tsx --minify --target node --outdir ./build",
-    "format": "biome format --write src",
-    "migrate": "drizzle-kit generate && drizzle-kit migrate"
+  "devDependencies": {
+    "@types/node": "^20.14.5",
+    "drizzle-kit": "^0.22.7"
   }
 }

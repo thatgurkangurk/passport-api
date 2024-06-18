@@ -4,8 +4,8 @@ import * as permissionsSchema from "./schema/permission";
 import * as oauthAccountsSchema from "./schema/oauth-account";
 
 export const schema = {
-	...usersSchema,
-	...sessionsSchema,
-	...permissionsSchema,
-	...oauthAccountsSchema,
+  ...usersSchema,
+  ...sessionsSchema,
+  ...permissionsSchema,
+  ...oauthAccountsSchema,
 };

@@ -1,0 +1,11 @@
+---
+import Base from "@/layouts/Base.astro";
+
+if (!Astro.locals.user) {
+  return Astro.redirect("/auth/login");
+}
+---
+
+<Base title="home">
+  <h1 class="text-3xl">welcome to Passport</h1>
+</Base>
